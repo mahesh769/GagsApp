@@ -3,6 +3,7 @@ import axios from "axios";
 import flashMessage from "../../components/common/CustomFlashAlert";
 import { logoutUser } from "../../utility/commonFunctions";
 import { KEY_USER_TOKEN } from "../../utility/constants";
+import { API_V1, BASE } from "./apiTypes";
 
 
 const ourRequest = axios.CancelToken.source()
@@ -23,42 +24,37 @@ export default async (method) => {
 }
 
 export async function callApi(method, resolve, reject) {
-
-
-
     let headers = {
         Accept: 'application/json',
         'Content-Type': 'multipart/form-data',
     }
-
     if (global[KEY_USER_TOKEN]) {
-        headers.Authorization = `Token ${global[KEY_USER_TOKEN]}`
+        headers.Authorization = `Bearer ${global[KEY_USER_TOKEN]}`
     }
+    
     let axiosData = {
         method: method.apiType,
         headers: headers,
-        url: method.type,
+        url: API_V1+method.type ,
         cancelToken: ourRequest.token
     }
-
+    if(method.payload.p){
+        axiosData.url = API_V1+method.type+method.payload.p
+    }
     dropConsoleLog('API HEADER', JSON.stringify(headers))
     dropConsoleLog('API URL', axiosData.url)
     dropConsoleLog('API PAYLOAD', method.payload)
-
     if (method.apiType === 'GET') {
-
     }
     else {
         var formData = await getFormData(method.payload)
         axiosData.data = formData
     }
-
     try {
         let response = await axios(axiosData)
         checkResponse(response, resolve, reject)
     } catch (err) {
         dropConsoleLog('API ERROR', JSON.stringify(err))
-
         let response = err.response;
         if (response) {
             checkResponse(response, resolve, reject)

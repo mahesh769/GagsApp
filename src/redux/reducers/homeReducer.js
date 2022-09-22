@@ -12,7 +12,11 @@ export default function homeReducer(state = {
             return { ...state, homeFetching: true, homeError: null, ishomeSuccess: false };
             break;
         case actionTypes.HOME_SUCCESS:
-            return { ...state, homeFetching: false, homeError: null, homeRes: action.payload, ishomeSuccess: true };
+            let array=action.payload
+            if(state.homeRes&&state.homeRes.length>0){
+                array=[...state.homeRes,action.payload[0]]
+            }
+            return { ...state, homeFetching: false, homeError: null, homeRes: array, ishomeSuccess: true };
             break;
         case actionTypes.HOME_FAILURE:
             return { ...state, homeFetching: false, homeError: action.error, homeRes: state.homeRes, ishomeSuccess: false };

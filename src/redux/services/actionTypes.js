@@ -1,6 +1,6 @@
 export const actionTypes = {
 
-    HOME_METHOD: "HOME_method",
+    HOME_METHOD: "products/",
     HOME_SUCCESS: "HOME_success",
     HOME_FAILURE: "HOME_failure",
     HOME_CLEAR: "HOME_clear",
